@@ -1,5 +1,5 @@
-const Location  = require('./location');
+const LocationSchema  = require('./LocationSchema');
 
 module.exports = {
-  Location,
+  LocationSchema,
 }

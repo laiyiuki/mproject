@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@feathers-plus/batch-loader@^0.3.0":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@feathers-plus/batch-loader/-/batch-loader-0.3.3.tgz#ccfacc3d3fe4c67dcb9679274bb3211afd1fbe41"
+
 "@feathersjs/authentication-jwt@^2.0.1":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@feathersjs/authentication-jwt/-/authentication-jwt-2.0.1.tgz#ef13f869bd86bd702093265487c017443b4fef31"
@@ -78,7 +82,7 @@
     express "^4.16.2"
     uberproto "^2.0.0"
 
-"@feathersjs/feathers@^3.1.7":
+"@feathersjs/feathers@^3.1.3", "@feathersjs/feathers@^3.1.7":
   version "3.1.7"
   resolved "https://registry.yarnpkg.com/@feathersjs/feathers/-/feathers-3.1.7.tgz#34e77cfc4d74633c2f2d155fe3d2e7271b32168e"
   dependencies:
@@ -140,7 +144,7 @@ ajv-keywords@^3.0.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-3.2.0.tgz#e86b819c602cf8821ad637413698f1dec021847a"
 
-ajv@^5.1.0:
+ajv@^5.1.0, ajv@^5.5.2:
   version "5.5.2"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-5.5.2.tgz#73b5eeca3fab653e3d3f9422b341ad42205dc965"
   dependencies:
@@ -885,6 +889,19 @@ fast-levenshtein@~2.0.4:
 fast-safe-stringify@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/fast-safe-stringify/-/fast-safe-stringify-2.0.4.tgz#4fe828718aa61dbcf9119c3c24e79cc4dea973b2"
+
+feathers-hooks-common@^4.14.1:
+  version "4.14.1"
+  resolved "https://registry.yarnpkg.com/feathers-hooks-common/-/feathers-hooks-common-4.14.1.tgz#d7b085a0d053b11a910b257d91d9390783564922"
+  dependencies:
+    "@feathers-plus/batch-loader" "^0.3.0"
+    "@feathersjs/commons" "^1.4.0"
+    "@feathersjs/errors" "^3.3.0"
+    "@feathersjs/feathers" "^3.1.3"
+    ajv "^5.5.2"
+    debug "^3.1.0"
+    process "0.11.10"
+    traverse "^0.6.6"
 
 feathers-mongoose@^6.1.2:
   version "6.1.2"
@@ -1733,6 +1750,10 @@ process-nextick-args@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-2.0.0.tgz#a37d732f4271b4ab1ad070d35508e8290788ffaa"
 
+process@0.11.10:
+  version "0.11.10"
+  resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
+
 progress@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.0.tgz#8a1be366bf8fc23db2bd23f10c6fe920b4389d1f"
@@ -2166,6 +2187,10 @@ tough-cookie@~2.3.3:
   resolved "https://registry.yarnpkg.com/tough-cookie/-/tough-cookie-2.3.4.tgz#ec60cee38ac675063ffc97a5c18970578ee83655"
   dependencies:
     punycode "^1.4.1"
+
+traverse@^0.6.6:
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/traverse/-/traverse-0.6.6.tgz#cbdf560fd7b9af632502fed40f918c157ea97137"
 
 triple-beam@^1.2.0, triple-beam@^1.3.0:
   version "1.3.0"
