@@ -1,6 +1,5 @@
-module.exports = function (path, name) {
-  return async context => {
+const { getByDot } = require('feathers-hooks-common');
 
-    return context;
-  }
-}
+module.exports = function isAction(tag) {
+  return context => getByDot(context.params, 'action') === tag;
+};

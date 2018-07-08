@@ -1,44 +1,56 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const {
-  hashPassword, protect
+  hashPassword,
+  protect,
 } = require('@feathersjs/authentication-local').hooks;
-const { iff, paramsFromClient } = require('feathers-hooks-common');
+const {
+  disableMultiItemChange,
+  disablePagination,
+  iff,
+  paramsFromClient,
+  skipRemainingHooks,
+} = require('feathers-hooks-common');
 
-// const isNewUser = require('../../hooks/is-new-user');
+// Common hooks
+const isAction = require('../../hooks/is-action');
+const noRecordFound = require('../../hooks/no-record-found');
+
+// users: After hooks
+const verifyPhoneNumber = require('./hooks/before/verify-phone-number');
+const isNewUser = require('./hooks/before/is-new-user');
+
+// users: After hooks
 const requestSMSVerifyCode = require('./hooks/after/request-sms-verify-code');
 
 module.exports = {
   before: {
-    all: [
-      paramsFromClient('action'),
+    all: [paramsFromClient('action')],
+    find: [skipRemainingHooks(isAction('sign-up')), authenticate('jwt')],
+    get: [authenticate('jwt')],
+    create: [isNewUser(), verifyPhoneNumber(), hashPassword()],
+    update: [hashPassword(), authenticate('jwt')],
+    patch: [
+      disableMultiItemChange(),
+      hashPassword(),
+      // authenticate('jwt')
     ],
-    find: [],
-    get: [ authenticate('jwt') ],
-    create: [
-      // hashPassword(), isNewUser()
-    ],
-    update: [ hashPassword(),  authenticate('jwt') ],
-    patch: [ hashPassword(),  authenticate('jwt') ],
-    remove: [ authenticate('jwt') ]
+    remove: [authenticate('jwt'), disableMultiItemChange()],
   },
 
   after: {
     all: [
       // Make sure the password field is never sent to the client
       // Always must be the last hook
-      protect('password')
+      protect('password'),
     ],
-    find: [
-      iff(
-        ctx => ctx.params.action === 'sign-up' && ctx.result.data.length === 0,
-        requestSMSVerifyCode()
-      )
-    ],
+    find: [iff(isAction('sign-up') && noRecordFound(), requestSMSVerifyCode())],
     get: [],
-    create: [],
+    create: [
+      // ctx => console.log('params', ctx.params),
+    ],
     update: [],
     patch: [],
-    remove: []
+    remove: [],
   },
 
   error: {
@@ -48,6 +60,6 @@ module.exports = {
     create: [],
     update: [],
     patch: [],
-    remove: []
-  }
+    remove: [],
+  },
 };
