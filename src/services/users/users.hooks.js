@@ -25,6 +25,7 @@ const constructPhone = require('./hooks/before/construct-phone');
 
 // users: After hooks
 const requestSMSVerifyCode = require('./hooks/after/request-sms-verify-code');
+const localAuthenticate = require('./hooks/after/local-authenticate');
 
 module.exports = {
   before: {
@@ -61,7 +62,7 @@ module.exports = {
       // iff(isAction('sign-up') && !noRecordFound(), ctx => console.log('exist')),
     ],
     get: [],
-    create: [],
+    create: [localAuthenticate()],
     update: [],
     patch: [],
     remove: [],
