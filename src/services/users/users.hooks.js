@@ -4,9 +4,12 @@ const {
   protect,
 } = require('@feathersjs/authentication-local').hooks;
 const {
+  discard,
   disableMultiItemChange,
   disablePagination,
   iff,
+  iffElse,
+  keep,
   paramsFromClient,
   skipRemainingHooks,
 } = require('feathers-hooks-common');
@@ -15,9 +18,10 @@ const {
 const isAction = require('../../hooks/is-action');
 const noRecordFound = require('../../hooks/no-record-found');
 
-// users: After hooks
-const verifyPhoneNumber = require('./hooks/before/verify-phone-number');
+// users: Before hooks
+// const verifyPhoneNumber = require('./hooks/before/verify-phone-number');
 const isNewUser = require('./hooks/before/is-new-user');
+const constructPhone = require('./hooks/before/construct-phone');
 
 // users: After hooks
 const requestSMSVerifyCode = require('./hooks/after/request-sms-verify-code');
@@ -27,7 +31,13 @@ module.exports = {
     all: [paramsFromClient('action')],
     find: [skipRemainingHooks(isAction('sign-up')), authenticate('jwt')],
     get: [authenticate('jwt')],
-    create: [isNewUser(), verifyPhoneNumber(), hashPassword()],
+    create: [
+      // iff(isAction('verify-phone'), verifyPhoneNumber()),
+      // skipRemainingHooks(isAction('verify-phone')),
+      constructPhone(),
+      isNewUser(),
+      hashPassword(),
+    ],
     update: [hashPassword(), authenticate('jwt')],
     patch: [
       disableMultiItemChange(),
@@ -43,11 +53,15 @@ module.exports = {
       // Always must be the last hook
       protect('password'),
     ],
-    find: [iff(isAction('sign-up') && noRecordFound(), requestSMSVerifyCode())],
-    get: [],
-    create: [
-      // ctx => console.log('params', ctx.params),
+    find: [
+      iff(isAction('sign-up'), [
+        iffElse(noRecordFound(), requestSMSVerifyCode(), keep('createdAt')),
+      ]),
+      // iff(isAction('sign-up') && noRecordFound(), requestSMSVerifyCode()),
+      // iff(isAction('sign-up') && !noRecordFound(), ctx => console.log('exist')),
     ],
+    get: [],
+    create: [],
     update: [],
     patch: [],
     remove: [],

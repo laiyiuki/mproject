@@ -10,11 +10,11 @@ const configuration = require('@feathersjs/configuration');
 const express = require('@feathersjs/express');
 const socketio = require('@feathersjs/socketio');
 
-
 const middleware = require('./middleware');
 const services = require('./services');
 const appHooks = require('./app.hooks');
 const channels = require('./channels');
+const twillioApi = require('./twillio-api');
 
 const authentication = require('./authentication');
 
@@ -48,6 +48,7 @@ app.configure(services);
 // Set up event channels (see channels.js)
 app.configure(channels);
 
+app.configure(twillioApi);
 // Configure a middleware for 404s and the error handler
 app.use(express.notFound());
 app.use(express.errorHandler({ logger }));

@@ -3,13 +3,11 @@ module.exports = function noRecordFound() {
     const { result } = context;
 
     if (typeof result === 'object' && result.total === 0) {
-      return true;
+      return context;
     }
 
-    if (typeof result === 'array' && result.length === 0) {
-      return true;
+    if (Array.isArray(result) && result.length === 0) {
+      return context;
     }
-
-    return false;
   };
 };

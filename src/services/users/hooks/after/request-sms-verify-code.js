@@ -9,13 +9,13 @@ module.exports = function requestSMSVerifyCode() {
       authy(apiKey).phones().verification_start,
     );
 
-    const { phone, countryCode } = context.params.query;
-    const response = await requestVerifyCode(phone, countryCode, {
+    const { phoneNumber, countryCode } = context.params.query;
+    const response = await requestVerifyCode(phoneNumber, countryCode, {
       via: 'sms',
       locale: 'zh-hk',
       code_length: 4,
     });
-    console.log('Twillio response: ', response);
+    // console.log('Twillio response: ', response);
 
     return context;
   };
