@@ -8,7 +8,7 @@ module.exports = function(app) {
     {
       phone: { type: String },
       countryCode: { type: String },
-      phoneBumber: { type: String },
+      phoneNumber: { type: String },
       email: { type: String },
       password: { type: String },
       facebookId: { type: String },
