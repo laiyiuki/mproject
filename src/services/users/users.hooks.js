@@ -9,8 +9,10 @@ const {
   disablePagination,
   iff,
   iffElse,
+  isProvider,
   keep,
   paramsFromClient,
+  preventChanges,
   skipRemainingHooks,
 } = require('feathers-hooks-common');
 
@@ -25,7 +27,7 @@ const constructPhone = require('./hooks/before/construct-phone');
 
 // users: After hooks
 const requestSMSVerifyCode = require('./hooks/after/request-sms-verify-code');
-const localAuthenticate = require('./hooks/after/local-authenticate');
+const signIn = require('./hooks/after/sign-in');
 
 module.exports = {
   before: {
@@ -41,28 +43,23 @@ module.exports = {
     ],
     update: [hashPassword(), authenticate('jwt')],
     patch: [
+      authenticate('jwt'),
       disableMultiItemChange(),
+      iff(isProvider('external'), [preventChanges('phone')]),
       hashPassword(),
-      // authenticate('jwt')
     ],
     remove: [authenticate('jwt'), disableMultiItemChange()],
   },
 
   after: {
-    all: [
-      // Make sure the password field is never sent to the client
-      // Always must be the last hook
-      protect('password'),
-    ],
+    all: [protect('password')],
     find: [
-      iff(isAction('sign-up'), [
+      iff(isAction('phone-sign-up'), [
         iffElse(noRecordFound(), requestSMSVerifyCode(), keep('createdAt')),
       ]),
-      // iff(isAction('sign-up') && noRecordFound(), requestSMSVerifyCode()),
-      // iff(isAction('sign-up') && !noRecordFound(), ctx => console.log('exist')),
     ],
     get: [],
-    create: [localAuthenticate()],
+    create: [],
     update: [],
     patch: [],
     remove: [],
