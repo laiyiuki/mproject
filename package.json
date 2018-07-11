@@ -22,7 +22,7 @@
   "scripts": {
     "test": "yarn run eslint && yarn run mocha",
     "eslint": "eslint src/. test/. --config .eslintrc.json",
-    "start": "nodemon src/",
+    "start": "node src/",
     "mocha": "mocha test/ --recursive --exit",
     "stage": "NODE_ENV=staging PORT=3000 node src/"
   },
