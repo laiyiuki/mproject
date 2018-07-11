@@ -32,7 +32,7 @@ const signIn = require('./hooks/after/sign-in');
 module.exports = {
   before: {
     all: [paramsFromClient('action')],
-    find: [skipRemainingHooks(isAction('sign-up')), authenticate('jwt')],
+    find: [skipRemainingHooks(isAction('phone-sign-up')), authenticate('jwt')],
     get: [authenticate('jwt')],
     create: [
       // iff(isAction('verify-phone'), verifyPhoneNumber()),
