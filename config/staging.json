@@ -1,6 +1,6 @@
 {
   "host": "quiet-garden-63699.herokuapp.com",
-  "port": "3030",
+  "port": "443",
   "mongodb":
     "mongodb://manhldgs:learnLatest2018!@ds131531.mlab.com:31531/learnla-staging"
 }
