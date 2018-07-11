@@ -1,5 +1,6 @@
 {
-  "host": "HOST",
-  "port": "PORT",
-  "mongodb": "MONGO"
+  "host": "https://quiet-garden-63699.herokuapp.com",
+  "port": "3838",
+  "mongodb":
+    "mongodb://manhldgs:learnLatest2018!@ds131531.mlab.com:31531/learnla-staging"
 }
