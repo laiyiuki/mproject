@@ -2,36 +2,74 @@
 //
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
-const { LocationSchema } = require('./customTypes');
+const {
+  LocationSchema,
+  VerificationSchema,
+  CourseSchema,
+} = require('./customTypes');
 
-module.exports = function (app) {
+module.exports = function(app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
 
-  const timeSession = new Schema({
-    days: { type: [String] },
-    startTime: { type: Date },
-    endTime: { type: Date },
-  });
+  // const timeSession = new Schema({
+  //   days: { type: [String] },
+  //   startTime: { type: Date },
+  //   endTime: { type: Date },
+  // });
 
+  const teachers = new Schema(
+    {
+      // name, phone, email, avatar, gender
+      userId: { type: Schema.Types.ObjectId, required: true },
 
-  const teachers = new Schema({
+      role: { type: String }, // personal / organization
+      organization: { type: String },
+      occupation: { type: String },
+      video: { type: String },
+      educationLevel: { type: String },
+      school: { type: String },
+      district: { type: String },
+      bio: { type: String },
 
-    userId: { type: Schema.Types.ObjectId, required: true },
-    role: { type: String },
-    organization: { type: String },
-    occupation: { type: String },
-    educationLevel: { type: String },
-    school: { type: String },
-    // subjects: { type: [subject] },
-    locations: { type: [LocationSchema] },
-    timePrefs: {type: [timeSession]},
-    settings: { ype: Object },
-    status: { type: String },
+      profession: { type: String },
+      award: { type: String },
 
-  }, {
-    timestamps: true
-  });
+      timetable: { type: [Number] },
+      courses: { type: [CourseSchema] },
+      locations: { type: [LocationSchema] },
+
+      duration: { type: Number },
+      charge: { type: Number },
+      acceptMultiStudent: { type: Boolean },
+      additionalCostPerHead: { type: Number },
+
+      notifications: { type: [String] },
+      verifications: { type: [VerificationSchema] },
+      status: { type: String },
+    },
+    {
+      timestamps: true,
+    },
+  );
 
   return mongooseClient.model('teachers', teachers);
 };
+
+// timeSlots: [
+//   {
+//     day: {
+//       monday:true
+//       tuesday:false
+//       wednesday:true
+//       thursday:false
+//       friday:true
+//       saturday:false
+//       sunday:false
+//     },
+//     time: {
+//       startTime:"18:15"
+//       endTime:"18:45"
+//     }
+//   }
+// ]
