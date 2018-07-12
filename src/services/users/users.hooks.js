@@ -15,6 +15,7 @@ const {
   preventChanges,
   skipRemainingHooks,
 } = require('feathers-hooks-common');
+const { restrictToOwner } = require('feathers-authentication-hooks');
 
 // Common hooks
 const isAction = require('../../hooks/is-action');
@@ -44,6 +45,7 @@ module.exports = {
     update: [hashPassword(), authenticate('jwt')],
     patch: [
       authenticate('jwt'),
+      restrictToOwner({ idField: '_id', ownerField: '_id' }),
       disableMultiItemChange(),
       iff(isProvider('external'), [preventChanges('phone')]),
       hashPassword(),
