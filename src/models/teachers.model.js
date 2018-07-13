@@ -6,17 +6,12 @@ const {
   LocationSchema,
   VerificationSchema,
   CourseSchema,
+  TimeslotSchema,
 } = require('./customTypes');
 
 module.exports = function(app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
-
-  // const timeSession = new Schema({
-  //   days: { type: [String] },
-  //   startTime: { type: Date },
-  //   endTime: { type: Date },
-  // });
 
   const teachers = new Schema(
     {
@@ -35,7 +30,8 @@ module.exports = function(app) {
       profession: { type: String },
       award: { type: String },
 
-      timetable: { type: [Number] },
+      // timetable: { type: [Number] },
+      timeslots: { type: [TimeslotSchema] },
       courses: { type: [CourseSchema] },
       locations: { type: [LocationSchema] },
 
