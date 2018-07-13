@@ -12,14 +12,17 @@ const {
   preventChanges,
   skipRemainingHooks,
 } = require('feathers-hooks-common');
-const { restrictToOwner } = require('feathers-authentication-hooks');
+const {
+  restrictToOwner,
+  associateCurrentUser,
+} = require('feathers-authentication-hooks');
 
 module.exports = {
   before: {
     all: [authenticate('jwt')],
     find: [],
     get: [],
-    create: [authenticate('jwt'), disableMultiItemChange()],
+    create: [authenticate('jwt'), associateCurrentUser()],
     update: [disallow()],
     patch: [authenticate('jwt'), disableMultiItemChange()],
     remove: [authenticate('jwt'), disableMultiItemChange()],

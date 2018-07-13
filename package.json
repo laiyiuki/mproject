@@ -4,9 +4,7 @@
   "version": "0.0.0",
   "homepage": "",
   "main": "src",
-  "keywords": [
-    "feathers"
-  ],
+  "keywords": ["feathers"],
   "author": {
     "name": "",
     "email": ""
@@ -26,7 +24,7 @@
     "eslint": "eslint src/. test/. --config .eslintrc.json",
     "start": "node src/",
     "mocha": "mocha test/ --recursive --exit",
-    "stage": "node src/"
+    "dev": "nodemon src/"
   },
   "dependencies": {
     "@feathersjs/authentication": "^2.1.7",

@@ -4,6 +4,7 @@ const local = require('@feathersjs/authentication-local');
 const oauth2 = require('@feathersjs/authentication-oauth2');
 const FacebookStrategy = require('passport-facebook');
 const { protect } = require('@feathersjs/authentication-local').hooks;
+const { iff, discard } = require('feathers-hooks-common');
 
 module.exports = function(app) {
   const config = app.get('authentication');
@@ -30,16 +31,40 @@ module.exports = function(app) {
   // to create a new valid JWT (e.g. local or oauth2)
   app.service('authentication').hooks({
     before: {
-      create: [authentication.hooks.authenticate(config.strategies)],
+      all: [
+        // ctx => {
+        //   ctx.params.action = ctx.data.action;
+        // },
+        ctx => console.log('auth: all: ctx.data', ctx.data),
+        ctx => console.log('-------------'),
+        // discard('action'),
+        ctx => console.log('auth: all: ctx.params', ctx.params.headers),
+        ctx => console.log('****************'),
+      ],
+      create: [
+        ctx => console.log('create : data', ctx.data),
+        ctx => console.log('=============='),
+        ctx => console.log('create: params', ctx.params.headers),
+        ctx => console.log('////////////////'),
+
+        authentication.hooks.authenticate(config.strategies),
+      ],
       remove: [authentication.hooks.authenticate('jwt')],
     },
     after: {
       create: [
+        ctx => console.log(''),
         ctx => {
           ctx.result.user = ctx.params.user;
         },
+        // ctx => {
+        //   if (ctx.params.user && ctx.params.user.status === 'new')
+        // }
         protect('user.password'),
       ],
     },
   });
 };
+
+// user signup -> user created -> look at roles -> createe corresponding profile
+// user lgoin with teacher/studentflag -> find corresponding profile -> if not exist create a new ONE

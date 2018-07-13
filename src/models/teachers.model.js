@@ -16,7 +16,7 @@ module.exports = function(app) {
   const teachers = new Schema(
     {
       // name, phone, email, avatar, gender
-      userId: { type: Schema.Types.ObjectId, required: true },
+      userId: { type: Schema.Types.ObjectId, required: true, unique: true },
 
       role: { type: String }, // personal / organization
       organization: { type: String },
