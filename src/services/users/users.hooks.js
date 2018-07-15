@@ -4,9 +4,13 @@ const {
   protect,
 } = require('@feathersjs/authentication-local').hooks;
 const {
+  // actOnDispatch,
+  // alterItems,
   discard,
   disableMultiItemChange,
+  disableMultiItemCreate,
   disablePagination,
+  disallow,
   iff,
   iffElse,
   isProvider,
@@ -25,32 +29,36 @@ const noRecordFound = require('../../hooks/no-record-found');
 // const verifyPhoneNumber = require('./hooks/before/verify-phone-number');
 const isNewUser = require('./hooks/before/is-new-user');
 const constructPhone = require('./hooks/before/construct-phone');
+const hasRole = require('./hooks/before/has-role');
 
 // users: After hooks
 const requestSMSVerifyCode = require('./hooks/after/request-sms-verify-code');
 const signIn = require('./hooks/after/sign-in');
+const generateProfile = require('./hooks/after/generate-profile');
 
 module.exports = {
   before: {
     all: [paramsFromClient('action')],
     find: [skipRemainingHooks(isAction('phone-sign-up')), authenticate('jwt')],
-    get: [authenticate('jwt')],
+    get: [iff(isProvider('external'), authenticate('jwt'))],
     create: [
-      // iff(isAction('verify-phone'), verifyPhoneNumber()),
-      // skipRemainingHooks(isAction('verify-phone')),
+      disableMultiItemCreate(),
       constructPhone(),
       isNewUser(),
+      hasRole(),
       hashPassword(),
     ],
-    update: [hashPassword(), authenticate('jwt')],
+    update: [disallow()],
     patch: [
-      authenticate('jwt'),
-      restrictToOwner({ idField: '_id', ownerField: '_id' }),
       disableMultiItemChange(),
-      iff(isProvider('external'), [preventChanges('phone')]),
+      iff(isProvider('external'), [
+        authenticate('jwt'),
+        restrictToOwner({ idField: '_id', ownerField: '_id' }),
+        preventChanges('phone'),
+      ]),
       hashPassword(),
     ],
-    remove: [authenticate('jwt'), disableMultiItemChange()],
+    remove: [disableMultiItemChange(), authenticate('jwt')],
   },
 
   after: {
@@ -61,7 +69,7 @@ module.exports = {
       ]),
     ],
     get: [],
-    create: [],
+    create: [generateProfile()],
     update: [],
     patch: [],
     remove: [],

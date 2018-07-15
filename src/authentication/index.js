@@ -6,6 +6,8 @@ const FacebookStrategy = require('passport-facebook');
 const { protect } = require('@feathersjs/authentication-local').hooks;
 const { iff, discard } = require('feathers-hooks-common');
 
+// const isAction = require('../hooks/is-action');
+
 module.exports = function(app) {
   const config = app.get('authentication');
 
@@ -35,17 +37,17 @@ module.exports = function(app) {
         // ctx => {
         //   ctx.params.action = ctx.data.action;
         // },
-        ctx => console.log('auth: all: ctx.data', ctx.data),
-        ctx => console.log('-------------'),
+        // ctx => console.log('auth: all: ctx.data', ctx.data),
+        // ctx => console.log('-------------'),
         // discard('action'),
-        ctx => console.log('auth: all: ctx.params', ctx.params.headers),
-        ctx => console.log('****************'),
+        // ctx => console.log('auth: all: ctx.params', ctx.params.headers),
+        // ctx => console.log('****************'),
       ],
       create: [
-        ctx => console.log('create : data', ctx.data),
-        ctx => console.log('=============='),
-        ctx => console.log('create: params', ctx.params.headers),
-        ctx => console.log('////////////////'),
+        // ctx => console.log('create : data', ctx.data),
+        // ctx => console.log('=============='),
+        // ctx => console.log('create: params', ctx.params.headers),
+        // ctx => console.log('////////////////'),
 
         authentication.hooks.authenticate(config.strategies),
       ],
@@ -53,7 +55,6 @@ module.exports = function(app) {
     },
     after: {
       create: [
-        ctx => console.log(''),
         ctx => {
           ctx.result.user = ctx.params.user;
         },

@@ -4,6 +4,7 @@ const {
   discard,
   disableMultiItemChange,
   disablePagination,
+  fastJoin,
   iff,
   iffElse,
   isProvider,
@@ -17,15 +18,19 @@ const {
   associateCurrentUser,
 } = require('feathers-authentication-hooks');
 
+// const userResolver = require('./resolvers');
+
 module.exports = {
   before: {
-    all: [authenticate('jwt')],
+    all: [
+      iff(isProvider('external'), [authenticate('jwt'), restrictToOwner()]),
+    ],
     find: [],
     get: [],
-    create: [authenticate('jwt'), associateCurrentUser()],
+    create: [],
     update: [disallow()],
-    patch: [authenticate('jwt'), disableMultiItemChange()],
-    remove: [authenticate('jwt'), disableMultiItemChange()],
+    patch: [disableMultiItemChange()],
+    remove: [disableMultiItemChange()],
   },
 
   after: {
