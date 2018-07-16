@@ -29,7 +29,7 @@ const noRecordFound = require('../../hooks/no-record-found');
 // const verifyPhoneNumber = require('./hooks/before/verify-phone-number');
 const isNewUser = require('./hooks/before/is-new-user');
 const constructPhone = require('./hooks/before/construct-phone');
-const hasRole = require('./hooks/before/has-role');
+const isValidPlatform = require('./hooks/before/is-valid-platform');
 
 // users: After hooks
 const requestSMSVerifyCode = require('./hooks/after/request-sms-verify-code');
@@ -38,14 +38,14 @@ const generateProfile = require('./hooks/after/generate-profile');
 
 module.exports = {
   before: {
-    all: [paramsFromClient('action')],
+    all: [paramsFromClient('action', 'platform')],
     find: [skipRemainingHooks(isAction('phone-sign-up')), authenticate('jwt')],
     get: [iff(isProvider('external'), authenticate('jwt'))],
     create: [
+      isValidPlatform(),
       disableMultiItemCreate(),
       constructPhone(),
       isNewUser(),
-      hasRole(),
       hashPassword(),
     ],
     update: [disallow()],

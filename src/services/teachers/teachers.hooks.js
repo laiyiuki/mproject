@@ -18,7 +18,9 @@ const {
   associateCurrentUser,
 } = require('feathers-authentication-hooks');
 
-// const userResolver = require('./resolvers');
+const saveRoleToUser = require('./hooks/after/save-role-to-user');
+
+const resolvers = require('./resolvers');
 
 module.exports = {
   before: {
@@ -34,10 +36,10 @@ module.exports = {
   },
 
   after: {
-    all: [],
+    all: [fastJoin(resolvers)],
     find: [],
     get: [],
-    create: [],
+    create: [saveRoleToUser()],
     update: [],
     patch: [],
     remove: [],

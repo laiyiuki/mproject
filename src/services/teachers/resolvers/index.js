@@ -1,15 +1,13 @@
-const userResolver = {
+const resolvers = {
   joins: {
-    user: userId => record => 
-    author: ...,
-    starers: fieldNames => record => /* modify record */,
-    comments: {
-      resolver: ...,
-      joins: {
-        author: ...,
-      }
+    user: (...args) => async (teacher, context) => {
+      teacher.user = await context.app.service('users').get(teacher.userId, {
+        query: {
+          $select: { password: 0 },
+        },
+      });
     },
-  }
+  },
 };
 
-module.exports = userResolver;
+module.exports = resolvers;

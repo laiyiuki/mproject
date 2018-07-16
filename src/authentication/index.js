@@ -4,9 +4,14 @@ const local = require('@feathersjs/authentication-local');
 const oauth2 = require('@feathersjs/authentication-oauth2');
 const FacebookStrategy = require('passport-facebook');
 const { protect } = require('@feathersjs/authentication-local').hooks;
-const { iff, discard } = require('feathers-hooks-common');
+const { discard, iff, iffElse, isNot } = require('feathers-hooks-common');
 
-// const isAction = require('../hooks/is-action');
+const isValidPlatform = require('./hooks/before/is-valid-platform');
+
+const attachProfile = require('./hooks/after/attach-profile');
+const attachOrGenerateProfile = require('./hooks/after/attach-or-generate-profile');
+
+const isAuthorization = require('./hooks/is-authorization');
 
 module.exports = function(app) {
   const config = app.get('authentication');
@@ -33,35 +38,34 @@ module.exports = function(app) {
   // to create a new valid JWT (e.g. local or oauth2)
   app.service('authentication').hooks({
     before: {
-      all: [
-        // ctx => {
-        //   ctx.params.action = ctx.data.action;
-        // },
-        // ctx => console.log('auth: all: ctx.data', ctx.data),
-        // ctx => console.log('-------------'),
-        // discard('action'),
-        // ctx => console.log('auth: all: ctx.params', ctx.params.headers),
-        // ctx => console.log('****************'),
-      ],
       create: [
         // ctx => console.log('create : data', ctx.data),
         // ctx => console.log('=============='),
         // ctx => console.log('create: params', ctx.params.headers),
         // ctx => console.log('////////////////'),
+        // isValidPlatform(),
+        // ctx => console.log('=============================\n\n\n'),
+        // ctx => console.log(ctx.params),
+        // ctx => console.log('=====Before auth ========================\n\n\n'),
+        // ctx => console.log(ctx.data),
+        // ctx => console.log('params', ctx.params),
+
+        iff(isNot(isAuthorization()), isValidPlatform()),
 
         authentication.hooks.authenticate(config.strategies),
+        // iff(ctx => ctx.params.authenticated, isValidPlatform()),
+        // ctx => console.log('=====After auth ========================\n\n\n'),
+        // ctx => console.log(ctx.params),
       ],
       remove: [authentication.hooks.authenticate('jwt')],
     },
     after: {
       create: [
-        ctx => {
-          ctx.result.user = ctx.params.user;
-        },
-        // ctx => {
-        //   if (ctx.params.user && ctx.params.user.status === 'new')
-        // }
+        // ctx => console.log('afer create'),
+        // iffElse(isAuthorization(), attachProfile(), attachOrGenerateProfile()),
+        iff(ctx => ctx.params.authenticated, attachOrGenerateProfile()),
         protect('user.password'),
+        // ctx => console.log('after', ctx.result),
       ],
     },
   });
