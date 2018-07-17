@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const LocationSchema = new Schema({
-  category: { type: String },
+  category: { type: [Number] },
   geo: {
     type: { type: String, default: 'Point' },
     coordinates: { type: [] },

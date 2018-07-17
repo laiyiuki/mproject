@@ -18,7 +18,7 @@ const teacher = {
   // timeTable: [], // not yet confirmed
   courses: [{
     _id: 'ObjectId',
-    category: { type:  },
+    category: { type:  String },
     title: { type: String, required: true },
     level: { type: Number, required: true, default: 1000 },
     image: { type: String },
@@ -31,7 +31,7 @@ const teacher = {
     updatedAt: 2018-07-17T08:39:35.813Z,
   }],
   locations: [{
-    category: '',
+    category: [1, 2, 3],
     geo: {
       type: { type: String, default: 'Point' },
       coordinates: { type: [] },

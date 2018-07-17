@@ -24,10 +24,10 @@ module.exports = function(app) {
       video: { type: String },
       educationLevel: { type: String },
       school: { type: String },
-      district: { type: String },
+      // district: { type: String },
       bio: { type: String },
 
-      profession: { type: String },
+      // profession: { type: String },
       award: { type: String },
 
       // timetable: { type: [Number] },
