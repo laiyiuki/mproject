@@ -8,7 +8,7 @@ const { discard, iff, iffElse, isNot } = require('feathers-hooks-common');
 
 const isValidPlatform = require('./hooks/before/is-valid-platform');
 
-const attachProfile = require('./hooks/after/attach-profile');
+// const attachProfile = require('./hooks/after/attach-profile');
 const attachOrGenerateProfile = require('./hooks/after/attach-or-generate-profile');
 
 const isAuthorization = require('./hooks/is-authorization');
@@ -39,37 +39,20 @@ module.exports = function(app) {
   app.service('authentication').hooks({
     before: {
       create: [
-        // ctx => console.log('create : data', ctx.data),
-        // ctx => console.log('=============='),
-        // ctx => console.log('create: params', ctx.params.headers),
-        // ctx => console.log('////////////////'),
-        // isValidPlatform(),
-        // ctx => console.log('=============================\n\n\n'),
-        // ctx => console.log(ctx.params),
-        // ctx => console.log('=====Before auth ========================\n\n\n'),
-        // ctx => console.log(ctx.data),
-        // ctx => console.log('params', ctx.params),
-
         iff(isNot(isAuthorization()), isValidPlatform()),
-
         authentication.hooks.authenticate(config.strategies),
-        // iff(ctx => ctx.params.authenticated, isValidPlatform()),
-        // ctx => console.log('=====After auth ========================\n\n\n'),
-        // ctx => console.log(ctx.params),
       ],
       remove: [authentication.hooks.authenticate('jwt')],
     },
     after: {
       create: [
-        // ctx => console.log('afer create'),
-        // iffElse(isAuthorization(), attachProfile(), attachOrGenerateProfile()),
         iff(ctx => ctx.params.authenticated, attachOrGenerateProfile()),
-        protect('user.password'),
-        // ctx => console.log('after', ctx.result),
+        protect(
+          'user.password',
+          'teacher.user.password',
+          'student.user.password',
+        ),
       ],
     },
   });
 };
-
-// user signup -> user created -> look at roles -> createe corresponding profile
-// user lgoin with teacher/studentflag -> find corresponding profile -> if not exist create a new ONE
