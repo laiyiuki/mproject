@@ -12,8 +12,8 @@ module.exports = function(app) {
       email: { type: String },
       password: { type: String },
       facebookId: { type: String },
-      authyId: { type: String },
-      hashed_password: { type: String },
+      // authyId: { type: String },
+      // hashed_password: { type: String },
 
       name: { type: String },
       avatar: { type: String },
@@ -23,8 +23,8 @@ module.exports = function(app) {
       roles: { type: [String] },
       permissions: { type: [String] },
 
-      isStudent: { type: Boolean },
-      isTeacher: { type: Boolean },
+      // isStudent: { type: Boolean },
+      // isTeacher: { type: Boolean },
       status: { type: String, default: 'new' },
     },
     {
