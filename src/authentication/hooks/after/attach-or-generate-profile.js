@@ -3,14 +3,15 @@ module.exports = function attachOrGenerateProfile() {
     const { platform } = context.data;
     const { user } = context.params;
 
+    let profile;
+
     if (platform === 'admin') {
-      context.result.user = user;
-      return context;
+      profile = user;
     }
 
     if (platform === 'teacher') {
       if (user.roles.indexOf('teacher') === -1) {
-        context.result.teacher = await context.app
+        profile = await context.app
           .service('teachers')
           .create({ userId: user._id, roles: { $push: 'teacher' } });
       } else {
@@ -20,14 +21,14 @@ module.exports = function attachOrGenerateProfile() {
           },
           paginate: false,
         });
-        context.result.teacher = data[0];
+
+        profile = data[0];
       }
-      return context;
     }
 
     if (platform === 'students') {
       if (user.roles.indexOf('teacher') === -1) {
-        context.result.student = await context.app
+        profile = await context.app
           .service('students')
           .create({ userId: user._id });
       } else {
@@ -37,9 +38,12 @@ module.exports = function attachOrGenerateProfile() {
           },
           paginate: false,
         });
-        context.result.student = data[0];
+
+        profile = data[0];
       }
-      return context;
     }
+
+    context.result.profile = { ...profile };
+    return context;
   };
 };

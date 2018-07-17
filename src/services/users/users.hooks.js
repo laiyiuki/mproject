@@ -54,7 +54,7 @@ module.exports = {
       iff(isProvider('external'), [
         authenticate('jwt'),
         restrictToOwner({ idField: '_id', ownerField: '_id' }),
-        preventChanges('phone'),
+        preventChanges(true, 'phone', 'phoneNumber', 'countryCode'),
       ]),
       hashPassword(),
     ],

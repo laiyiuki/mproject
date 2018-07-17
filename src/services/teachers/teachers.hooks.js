@@ -18,6 +18,9 @@ const {
   associateCurrentUser,
 } = require('feathers-authentication-hooks');
 
+// Before hooks
+const extractAndUpdateUserInfo = require('./hooks/before/extract-and-update-user-info');
+// After hooks
 const saveRoleToUser = require('./hooks/after/save-role-to-user');
 
 const resolvers = require('./resolvers');
@@ -31,7 +34,7 @@ module.exports = {
     get: [],
     create: [],
     update: [disallow()],
-    patch: [disableMultiItemChange()],
+    patch: [disableMultiItemChange(), extractAndUpdateUserInfo()],
     remove: [disableMultiItemChange()],
   },
 

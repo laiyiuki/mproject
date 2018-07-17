@@ -47,11 +47,7 @@ module.exports = function(app) {
     after: {
       create: [
         iff(ctx => ctx.params.authenticated, attachOrGenerateProfile()),
-        protect(
-          'user.password',
-          'teacher.user.password',
-          'student.user.password',
-        ),
+        protect('profile.password', 'profile.user.password'),
       ],
     },
   });
