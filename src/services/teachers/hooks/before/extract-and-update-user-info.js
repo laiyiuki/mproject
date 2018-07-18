@@ -1,6 +1,6 @@
 module.exports = function extractAndUpdateUserInfo() {
   return async context => {
-    const { user } = context.params;
+    const { user } = context.data;
 
     if (user) {
       const res = await context.app

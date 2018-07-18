@@ -47,7 +47,7 @@ module.exports = function(app) {
     after: {
       create: [
         iff(ctx => ctx.params.authenticated, attachOrGenerateProfile()),
-        protect('profile.password', 'profile.user.password'),
+        protect('user.password', 'profile.password', 'profile.user.password'),
       ],
     },
   });

@@ -18,35 +18,25 @@ const {
   associateCurrentUser,
 } = require('feathers-authentication-hooks');
 
-// Before hooks
-const extractAndUpdateUserInfo = require('./hooks/before/extract-and-update-user-info');
-// After hooks
-const saveRoleToUser = require('./hooks/after/save-role-to-user');
-
-const resolvers = require('./resolvers');
-
 module.exports = {
   before: {
-    all: [
-      iff(isProvider('external'), [authenticate('jwt'), restrictToOwner()]),
-    ],
+    all: [iff(isProvider('external'), [authenticate('jwt')])],
     find: [],
     get: [],
-    create: [],
-    update: [disallow()],
-    patch: [
-      ctx => console.log('data ', ctx.data),
-      disableMultiItemChange(),
-      extractAndUpdateUserInfo(),
+    create: [
+      ctx => console.log('params', ctx.params.connection),
+      // restrictToOwner(idField: '', ownerField: 'teacherId'),
     ],
+    update: [disallow()],
+    patch: [],
     remove: [disableMultiItemChange()],
   },
 
   after: {
-    all: [fastJoin(resolvers)],
+    all: [],
     find: [],
     get: [],
-    create: [saveRoleToUser()],
+    create: [],
     update: [],
     patch: [],
     remove: [],

@@ -31,15 +31,18 @@ module.exports = function(app) {
       award: { type: String },
 
       // timetable: { type: [Number] },
-      timeslots: { type: [TimeslotSchema] },
+      timeslots: {
+        type: [TimeslotSchema],
+        default: [{ days: [1, 3, 5], startTime: '09:00', endTime: '18:00' }],
+      },
       courses: { type: [CourseSchema] },
       locations: { type: [LocationSchema] },
 
       experience: { type: Number },
-      duration: { type: Number }, // in mins
-      charge: { type: Number }, // charge per course
-      acceptMultiStudent: { type: Boolean },
-      additionalCostPerHead: { type: Number },
+      duration: { type: Number, default: 60 }, // in mins
+      fee: { type: Number, default: 200 }, // charge per course
+      acceptMultiStudent: { type: Boolean, default: false },
+      additionalCostPerHead: { type: Number, default: 50 },
 
       notifications: { type: [String] },
       verifications: { type: [VerificationSchema] },

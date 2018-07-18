@@ -44,7 +44,7 @@ const teacher = {
     unit: { type: String },
   }],
   duration: 1, // Number: hours
-  charge: 200, // Number
+  fee: 200, // Number
   acceptMultiStudent: true,
   additionalCostPerHead: 80, // Number: HKD
   notifications: ['newsletter', 'alert'],
