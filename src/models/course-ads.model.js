@@ -6,7 +6,7 @@ module.exports = function(app) {
   const courseAds = new Schema(
     {
       teacherId: { type: Schema.Types.ObjectId, required: true },
-
+      title: { type: String, required: true },
       timeslots: { type: [TimeslotSchema] },
       location: { type: LocationSchema },
 
@@ -24,7 +24,7 @@ module.exports = function(app) {
       minAge: { type: Number },
       maxAge: { type: Number },
 
-      status: { type: String, required: true, default: 'new' },
+      status: { type: String, required: true, default: 'new' }, // online / offline
     },
     {
       timestamps: true,

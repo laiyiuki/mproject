@@ -6,9 +6,9 @@ const FacebookStrategy = require('passport-facebook');
 const { protect } = require('@feathersjs/authentication-local').hooks;
 const { discard, iff, iffElse, isNot } = require('feathers-hooks-common');
 
+// Before hooks
 const isValidPlatform = require('./hooks/before/is-valid-platform');
-
-// const attachProfile = require('./hooks/after/attach-profile');
+// After hooks
 const attachOrGenerateProfile = require('./hooks/after/attach-or-generate-profile');
 
 const isAuthorization = require('./hooks/is-authorization');

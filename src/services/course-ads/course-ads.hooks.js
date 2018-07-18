@@ -18,22 +18,30 @@ const {
   associateCurrentUser,
 } = require('feathers-authentication-hooks');
 
+const resolvers = require('./resolvers');
+
 module.exports = {
   before: {
     all: [iff(isProvider('external'), [authenticate('jwt')])],
     find: [],
-    get: [],
-    create: [
-      ctx => console.log('params', ctx.params.connection),
-      // restrictToOwner(idField: '', ownerField: 'teacherId'),
+    get: [
+      iff(isProvider('external'), [
+        restrictToOwner({ idField: 'teacherId', ownerField: 'teacherId' }),
+      ]),
     ],
+    create: [],
     update: [disallow()],
-    patch: [],
+    patch: [
+      disableMultiItemChange(),
+      iff(isProvider('external'), [
+        restrictToOwner({ idField: 'teacherId', ownerField: 'teacherId' }),
+      ]),
+    ],
     remove: [disableMultiItemChange()],
   },
 
   after: {
-    all: [],
+    all: [fastJoin(resolvers)],
     find: [],
     get: [],
     create: [],

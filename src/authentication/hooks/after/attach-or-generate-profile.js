@@ -3,11 +3,12 @@ module.exports = function attachOrGenerateProfile() {
     const { platform } = context.data;
     const { user } = context.params;
 
-    let profile;
-
     if (platform === 'admin') {
-      profile = user;
+      context.result.user = user;
+      return context;
     }
+
+    let profile = {};
 
     if (platform === 'teacher') {
       if (user.roles.indexOf('teacher') === -1) {
@@ -24,6 +25,9 @@ module.exports = function attachOrGenerateProfile() {
 
         profile = data[0];
       }
+      context.params.user.teacherId = profile._id;
+      context.result.profile = profile;
+      return context;
     }
 
     if (platform === 'students') {
@@ -41,9 +45,9 @@ module.exports = function attachOrGenerateProfile() {
 
         profile = data[0];
       }
+      context.params.user.studentId = profile._id;
+      context.result.profile = profile;
+      return context;
     }
-
-    context.result.profile = { ...profile };
-    return context;
   };
 };
