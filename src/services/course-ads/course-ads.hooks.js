@@ -22,7 +22,10 @@ const resolvers = require('./resolvers');
 
 module.exports = {
   before: {
-    all: [iff(isProvider('external'), [authenticate('jwt')])],
+    all: [
+      iff(isProvider('external'), [authenticate('jwt')]),
+      paramsFromClient('action', 'paginate'),
+    ],
     find: [],
     get: [
       iff(isProvider('external'), [
