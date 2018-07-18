@@ -2,7 +2,7 @@ const teacher = {
   _id: "5b4c799d9fe23f8e70eabe8d",
   role: 'organization', // personal / organization
   organization: 'HK Tutors Ltd',
-  occupation: 'English teacher',
+  // occupation: 'English teacher',
   video: 'link to video',
   educationLevel: 'Master Degree',
   school: 'HKU',

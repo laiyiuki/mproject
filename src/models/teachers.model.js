@@ -20,7 +20,7 @@ module.exports = function(app) {
 
       role: { type: String }, // personal / organization
       organization: { type: String },
-      occupation: { type: String },
+      // occupation: { type: String },
       video: { type: String },
       educationLevel: { type: String },
       school: { type: String },
@@ -35,8 +35,9 @@ module.exports = function(app) {
       courses: { type: [CourseSchema] },
       locations: { type: [LocationSchema] },
 
-      duration: { type: Number },
-      charge: { type: Number },
+      experience: { type: Number },
+      duration: { type: Number }, // in mins
+      charge: { type: Number }, // charge per course
       acceptMultiStudent: { type: Boolean },
       additionalCostPerHead: { type: Number },
 
@@ -51,21 +52,3 @@ module.exports = function(app) {
 
   return mongooseClient.model('teachers', teachers);
 };
-
-// timeSlots: [
-//   {
-//     day: {
-//       monday:true
-//       tuesday:false
-//       wednesday:true
-//       thursday:false
-//       friday:true
-//       saturday:false
-//       sunday:false
-//     },
-//     time: {
-//       startTime:"18:15"
-//       endTime:"18:45"
-//     }
-//   }
-// ]
