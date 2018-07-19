@@ -28,7 +28,7 @@ module.exports = function(app) {
 
       expiredAt: { type: Date },
       removedAt: { type: Date },
-      activeAt: { type: Date },
+      onlineAt: { type: Date },
       // new -> complete -> archive | Del
       status: { type: String, required: true, default: 'new' },
     },
