@@ -11,7 +11,9 @@ const CourseSchema = new Schema(
     description: { type: String },
     approvedBy: { type: Schema.Types.ObjectId },
     remark: { type: String },
-    status: { type: String, required: true, default: 'new' }, // pending, approved, rejected
+
+    // new -> pending -> approved | rejected
+    status: { type: String, required: true, default: 'new' },
   },
   {
     timestamps: true,

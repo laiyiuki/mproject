@@ -6,25 +6,31 @@ module.exports = function(app) {
   const courseAds = new Schema(
     {
       teacherId: { type: Schema.Types.ObjectId, required: true },
-      title: { type: String, required: true },
-      timeslots: { type: [TimeslotSchema] },
-      location: { type: LocationSchema },
-
-      duration: { type: Number, required: true },
-      fee: { type: Number, required: true },
-      currency: { type: String, required: true, default: 'hkd' },
-      acceptMultiStudent: { type: Boolean },
-      additionalCostPerHead: { type: Number },
-
+      title: { type: String },
+      category: { type: String },
+      level: { type: String },
       description: { type: String },
       images: { type: [String] },
 
+      timeslots: { type: [TimeslotSchema] },
+      location: { type: LocationSchema },
+      duration: { type: Number },
+      fee: { type: Number },
+      currency: { type: String, default: 'hkd' },
+      acceptMultiStudent: { type: Boolean },
+      additionalCostPerHead: { type: Number },
+
       homeTuition: { type: Boolean },
       offerTrial: { type: Boolean },
+
       minAge: { type: Number },
       maxAge: { type: Number },
 
-      status: { type: String, required: true, default: 'new' }, // online / offline
+      expiredAt: { type: Date },
+      removedAt: { type: Date },
+      activeAt: { type: Date },
+      // new -> complete -> archive | Del
+      status: { type: String, required: true, default: 'new' },
     },
     {
       timestamps: true,
