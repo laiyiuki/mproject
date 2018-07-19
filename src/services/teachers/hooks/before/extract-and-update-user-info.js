@@ -5,7 +5,7 @@ module.exports = function extractAndUpdateUserInfo() {
     if (user) {
       const res = await context.app
         .service('users')
-        .patch(user._id, context.data.user, context.params);
+        .patch(context.params.user._id, context.data.user, context.params);
 
       delete context.data.user;
     }
