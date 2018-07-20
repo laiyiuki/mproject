@@ -32,7 +32,10 @@ module.exports = {
         restrictToOwner({ idField: 'teacherId', ownerField: 'teacherId' }),
       ]),
     ],
-    create: [associateCurrentUser({ idField: 'teacherId', as: 'teacherId' })],
+    create: [
+      associateCurrentUser({ idField: 'teacherId', as: 'teacherId' }),
+      ctx => console.log('create course ad data', ctx.params.user),
+    ],
     update: [disallow()],
     patch: [
       disableMultiItemChange(),

@@ -26,6 +26,7 @@ module.exports = function attachOrGenerateProfile() {
         profile = data[0];
       }
       context.params.user.teacherId = profile._id;
+      console.log('teacherId', profile._id);
       context.result.profile = profile;
       return context;
     }

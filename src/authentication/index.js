@@ -3,6 +3,7 @@ const jwt = require('@feathersjs/authentication-jwt');
 const local = require('@feathersjs/authentication-local');
 const oauth2 = require('@feathersjs/authentication-oauth2');
 const FacebookStrategy = require('passport-facebook');
+const FacebookTokenStrategy = require('passport-facebook-token');
 const { protect } = require('@feathersjs/authentication-local').hooks;
 const { discard, iff, iffElse, isNot } = require('feathers-hooks-common');
 
@@ -21,14 +22,16 @@ module.exports = function(app) {
   app.configure(jwt());
   app.configure(local());
 
+  console.log('config', config);
+
   app.configure(
     oauth2(
       Object.assign(
         {
-          name: 'facebook',
-          Strategy: FacebookStrategy,
+          name: 'facebookTokenTeacher',
+          Strategy: FacebookTokenStrategy,
         },
-        config.facebook,
+        config.facebookTokenTeacher,
       ),
     ),
   );
@@ -39,14 +42,18 @@ module.exports = function(app) {
   app.service('authentication').hooks({
     before: {
       create: [
+        ctx => console.log('atuh.data', ctx.data),
+
         iff(isNot(isAuthorization()), isValidPlatform()),
         authentication.hooks.authenticate(config.strategies),
+        // ctx => console.log('atuh', ctx.params),
       ],
       remove: [authentication.hooks.authenticate('jwt')],
     },
     after: {
       create: [
         iff(ctx => ctx.params.authenticated, attachOrGenerateProfile()),
+        ctx => console.log('atuh', ctx.params),
         protect('user.password', 'profile.password', 'profile.user.password'),
       ],
     },
