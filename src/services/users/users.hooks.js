@@ -51,21 +51,11 @@ module.exports = {
     update: [disallow()],
     patch: [
       disableMultiItemChange(),
-      // ctx => console.log('/////////// ', ctx.params.user),
-      // ctx => console.log('%%%%%%%%', ctx.params.connection.provider),
-
       iff(isProvider('external'), [
         authenticate('jwt'),
-        // ctx => console.log('1 ', ctx.params.user),
-
         restrictToOwner({ idField: '_id', ownerField: '_id' }),
-        ctx => console.log('2 ', ctx.params.user),
-
         preventChanges(false, 'phone', 'phoneNumber', 'countryCode'),
-        // ctx => console.log('3 ', ctx.params.user),
       ]),
-      // ctx => console.log('************ ', ctx.params.user),
-
       hashPassword(),
     ],
     remove: [disableMultiItemChange(), authenticate('jwt')],
@@ -81,7 +71,7 @@ module.exports = {
     get: [],
     create: [generateProfile()],
     update: [],
-    patch: [ctx => console.log('0000000000 ', ctx.params.user)],
+    patch: [],
     remove: [],
   },
 

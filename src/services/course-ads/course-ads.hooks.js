@@ -18,12 +18,15 @@ const {
   associateCurrentUser,
 } = require('feathers-authentication-hooks');
 
+const pushPayloadToUser = require('../../hooks/push-payload-to-user');
+
 const resolvers = require('./resolvers');
 
 module.exports = {
   before: {
     all: [
       iff(isProvider('external'), [authenticate('jwt')]),
+      pushPayloadToUser(),
       paramsFromClient('action', 'paginate'),
     ],
     find: [],
@@ -32,15 +35,9 @@ module.exports = {
         restrictToOwner({ idField: 'teacherId', ownerField: 'teacherId' }),
       ]),
     ],
-    create: [
-      ctx =>
-        console.log('888888888 course ads: before: patch ', ctx.params.user),
-      associateCurrentUser({ idField: 'teacherId', as: 'teacherId' }),
-      // ctx => console.log('create course ad data', ctx.params.user),
-    ],
+    create: [associateCurrentUser({ idField: 'teacherId', as: 'teacherId' })],
     update: [disallow()],
     patch: [
-      // ctx => console.log('course: before: patch ', ctx.params.user),
       disableMultiItemChange(),
       iff(isProvider('external'), [
         restrictToOwner({ idField: 'teacherId', ownerField: 'teacherId' }),
@@ -55,9 +52,7 @@ module.exports = {
     get: [],
     create: [],
     update: [],
-    patch: [
-      ctx => console.log('========= course: after: patch ', ctx.params.user),
-    ],
+    patch: [],
     remove: [],
   },
 

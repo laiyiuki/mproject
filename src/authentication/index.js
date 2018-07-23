@@ -11,7 +11,6 @@ const { discard, iff, iffElse, isNot } = require('feathers-hooks-common');
 const isValidPlatform = require('./hooks/before/is-valid-platform');
 // After hooks
 const attachOrGenerateProfile = require('./hooks/after/attach-or-generate-profile');
-const attachProfileId = require('./hooks/after/attach-profile-id');
 
 const isAuthorization = require('./hooks/is-authorization');
 
@@ -44,19 +43,15 @@ module.exports = function(app) {
   // to create a new valid JWT (e.g. local or oauth2)
   app.service('authentication').hooks({
     before: {
-      all: [ctx => console.log('auth all before params', '---------')],
       create: [
         iff(isNot(isAuthorization()), isValidPlatform()),
         authentication.hooks.authenticate(config.strategies),
-        ctx => console.log('auth before ', ctx.params),
       ],
       remove: [authentication.hooks.authenticate('jwt')],
     },
     after: {
       create: [
         iff(ctx => ctx.params.authenticated, attachOrGenerateProfile()),
-        ctx => console.log('auth after params', ctx.params.user),
-        attachProfileId(),
         protect('user.password', 'profile.password', 'profile.user.password'),
       ],
     },

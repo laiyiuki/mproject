@@ -32,11 +32,7 @@ module.exports = {
     get: [],
     create: [],
     update: [disallow()],
-    patch: [
-      // ctx => console.log('tacher: before: patch ', ctx.params.user),
-      disableMultiItemChange(),
-      // extractAndUpdateUserInfo(),
-    ],
+    patch: [disableMultiItemChange(), extractAndUpdateUserInfo()],
     remove: [disableMultiItemChange()],
   },
 
@@ -46,12 +42,7 @@ module.exports = {
     get: [],
     create: [saveRoleToUser()],
     update: [],
-    patch: [
-      // extractAndUpdateUserInfo(),
-
-      ctx =>
-        console.log('333333========= teacher: after: patch ', ctx.params.user),
-    ],
+    patch: [],
     remove: [],
   },
 
