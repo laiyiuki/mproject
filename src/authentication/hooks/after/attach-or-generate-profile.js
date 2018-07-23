@@ -3,6 +3,7 @@ module.exports = function attachOrGenerateProfile() {
     const { platform } = context.data;
     const { user } = context.params;
 
+    console.log('platform', platform);
     if (platform === 'admin') {
       context.result.user = user;
       return context;

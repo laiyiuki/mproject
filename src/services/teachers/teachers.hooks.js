@@ -27,17 +27,15 @@ const resolvers = require('./resolvers');
 
 module.exports = {
   before: {
-    all: [
-      iff(isProvider('external'), [authenticate('jwt'), restrictToOwner()]),
-    ],
+    all: [iff(isProvider('external'), [authenticate('jwt')])],
     find: [],
     get: [],
     create: [],
     update: [disallow()],
     patch: [
-      ctx => console.log('data ', ctx.data),
+      // ctx => console.log('tacher: before: patch ', ctx.params.user),
       disableMultiItemChange(),
-      extractAndUpdateUserInfo(),
+      // extractAndUpdateUserInfo(),
     ],
     remove: [disableMultiItemChange()],
   },
@@ -48,7 +46,12 @@ module.exports = {
     get: [],
     create: [saveRoleToUser()],
     update: [],
-    patch: [],
+    patch: [
+      // extractAndUpdateUserInfo(),
+
+      ctx =>
+        console.log('333333========= teacher: after: patch ', ctx.params.user),
+    ],
     remove: [],
   },
 

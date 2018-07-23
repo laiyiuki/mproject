@@ -33,11 +33,14 @@ module.exports = {
       ]),
     ],
     create: [
+      ctx =>
+        console.log('888888888 course ads: before: patch ', ctx.params.user),
       associateCurrentUser({ idField: 'teacherId', as: 'teacherId' }),
-      ctx => console.log('create course ad data', ctx.params.user),
+      // ctx => console.log('create course ad data', ctx.params.user),
     ],
     update: [disallow()],
     patch: [
+      // ctx => console.log('course: before: patch ', ctx.params.user),
       disableMultiItemChange(),
       iff(isProvider('external'), [
         restrictToOwner({ idField: 'teacherId', ownerField: 'teacherId' }),
@@ -52,7 +55,9 @@ module.exports = {
     get: [],
     create: [],
     update: [],
-    patch: [],
+    patch: [
+      ctx => console.log('========= course: after: patch ', ctx.params.user),
+    ],
     remove: [],
   },
 
