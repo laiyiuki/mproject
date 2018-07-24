@@ -8,7 +8,7 @@ module.exports = function(app) {
       teacherId: { type: Schema.Types.ObjectId, required: true },
       title: { type: String },
       category: { type: String },
-      level: { type: String },
+      level: { type: Number },
       description: { type: String },
       images: { type: [String] },
 
@@ -20,7 +20,7 @@ module.exports = function(app) {
       acceptMultiStudent: { type: Boolean },
       additionalCostPerHead: { type: Number },
 
-      homeTuition: { type: Boolean },
+      homeTuition: { type: Boolean, default: true },
       offerTrial: { type: Boolean },
 
       minAge: { type: Number },

@@ -21,17 +21,12 @@ module.exports = function(app) {
   app.configure(authentication(config));
   app.configure(jwt());
   app.configure(local());
-
-  app.configure(local());
-
-  console.log('config', config.facebookTokenTeacher);
-
   app.configure(
     oauth2(
       Object.assign(
         {
           name: 'facebookTokenTeacher',
-          Strategy: FacebookTokenStrategy,
+          Strategy: FacebookStrategy,
         },
         config.facebookTokenTeacher,
       ),
@@ -44,13 +39,23 @@ module.exports = function(app) {
   app.service('authentication').hooks({
     before: {
       create: [
-        iff(isNot(isAuthorization()), isValidPlatform()),
+        // ctx => (ctx.params.payload.platform = ctx.data.platform),
+        // ctx => console.log('auth data', ctx.params),
+        // iff(isNot(isAuthorization()), isValidPlatform()),
         authentication.hooks.authenticate(config.strategies),
+        ctx => console.log('auth before params', ctx.params),
+        ctx => console.log('auth before data', ctx.data),
+
+        // iff(isNot(isAuthorization()), isValidPlatform()),
       ],
       remove: [authentication.hooks.authenticate('jwt')],
     },
     after: {
       create: [
+        ctx => console.log('------'),
+        ctx => console.log('auth after params', ctx.params),
+        ctx => console.log('auth after dara', ctx.data),
+
         iff(ctx => ctx.params.authenticated, attachOrGenerateProfile()),
         protect('user.password', 'profile.password', 'profile.user.password'),
       ],
