@@ -1,35 +1,15 @@
 const { Verifier } = require('@feathersjs/authentication-oauth2');
 
 class CustomVerifier extends Verifier {
-  // The verify function has the exact same inputs and
-  // return values as a vanilla passport strategy
-  verify(req, accessToken, refreshToken, profile, done) {
-    // do your custom stuff. You can call internal Verifier methods
-    // and reference this.app and this.options. This method must be implemented.
-    console.log('--------');
-    // console.log('profile', profile);
-    // console.log('req', req);
-
-    // const user = null;
-    // const payload = null;
-    // the 'user' variable can be any truthy value
-    // the 'payload' is the payload for the JWT access token that is generated after successful authentication
-    // done(null, user, payload);
-    ///////////////////////////////////////
+  async verify(req, accessToken, refreshToken, profile, done) {
+    const app = this.app;
     const options = this.options;
-    // console.log('options', options);
+    console.log('profile._json', profile._json);
     const query = {
       [options.idField]: profile.id, // facebookId: profile.id
       $limit: 1,
     };
 
-    const data = { profile, accessToken, refreshToken };
-    console.log('data', data);
-
-    // const data = {
-    //   facebookId: profile.id,
-    //   name: profile
-    // }
     let existing;
 
     if (this.service.id === null || this.service.id === undefined) {
@@ -56,25 +36,34 @@ class CustomVerifier extends Verifier {
     // already authenticated) attach the profile to the existing entity
     // because they are likely "linking" social accounts/profiles.
     if (existing) {
-      return this._updateEntity(existing, data)
-        .then(entity => done(null, entity))
-        .catch(error => (error ? done(error) : done(null, error)));
+      // const user = await app.service(options.service).get(existing);
+      // return done(null, user);
+      // return this._updateEntity(existing, data)
+      //   .then(entity => done(null, entity))
+      //   .catch(error => (error ? done(error) : done(null, error)));
     }
 
-    // Find or create the user since they could have signed up via facebook.
-    this.service
-      .find({ query })
-      .then(this._normalizeResult)
-      .then(
-        entity =>
-          entity ? this._updateEntity(entity, data) : this._createEntity(data),
-      )
-      .then(entity => {
-        const id = entity[this.service.id];
-        const payload = { [`${this.options.entity}Id`]: id };
-        done(null, entity, payload);
-      })
-      .catch(error => (error ? done(error) : done(null, error)));
+    try {
+      const { data } = await app.service(options.service).find({ query });
+      if (data.length > 0) {
+        const payload = {
+          [`${this.options.entity}Id`]: data[0]._id,
+        };
+        return done(null, data, payload);
+      }
+
+      const user = await app.service(options.service).create({
+        facebookId: profile.id,
+        name: profile.displayName,
+        email: profile.email[0].value,
+      });
+      const payload = {
+        [`${this.options.entity}Id`]: user._id,
+      };
+      return done(null, user, payload);
+    } catch (err) {
+      return done(err);
+    }
   }
 }
 
