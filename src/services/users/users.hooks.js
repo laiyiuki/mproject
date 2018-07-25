@@ -42,6 +42,8 @@ module.exports = {
     find: [skipRemainingHooks(isAction('phone-sign-up')), authenticate('jwt')],
     get: [iff(isProvider('external'), authenticate('jwt'))],
     create: [
+      ctx => console.log('********', ctx.data),
+
       isValidPlatform(),
       disableMultiItemCreate(),
       constructPhone(),

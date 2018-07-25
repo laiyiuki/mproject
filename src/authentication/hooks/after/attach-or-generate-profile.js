@@ -31,7 +31,7 @@ module.exports = function attachOrGenerateProfile() {
     }
 
     if (platform === 'students') {
-      if (user.roles.indexOf('teacher') === -1) {
+      if (user.roles.indexOf('student') === -1) {
         profile = await context.app
           .service('students')
           .create({ userId: user._id });

@@ -25,9 +25,9 @@ module.exports = function(app) {
       educationLevel: { type: String },
       school: { type: String },
       // district: { type: String },
-      bio: { type: String },
+      // bio: { type: String },
 
-      // profession: { type: String },
+      profession: { type: String },
       award: { type: String },
 
       // timetable: { type: [Number] },
@@ -36,6 +36,7 @@ module.exports = function(app) {
         default: [{ days: [1, 3, 5], startTime: '09:00', endTime: '18:00' }],
       },
       courses: { type: [CourseSchema] },
+      removedCourses: { type: [CourseSchema] },
       locations: { type: [LocationSchema] },
 
       experience: { type: Number },
@@ -44,8 +45,11 @@ module.exports = function(app) {
       acceptMultiStudent: { type: Boolean, default: false },
       additionalCostPerHead: { type: Number, default: 50 },
 
-      notifications: { type: [String] },
+      notifications: { type: [String], default: ['analytics', 'marketing'] },
       verifications: { type: [VerificationSchema] },
+
+      extra: { type: Object },
+      device: { type: Object },
       status: { type: String },
     },
     {

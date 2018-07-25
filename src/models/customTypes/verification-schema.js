@@ -4,7 +4,9 @@ const { Schema } = mongoose;
 const VerificationSchema = new Schema(
   {
     type: { type: String, require: true },
-    file: { type: String },
+    image: { type: String },
+    video: { type: String },
+    description: { type: String },
     approvedBy: { type: Schema.Types.ObjectId },
     remark: { type: String },
     status: { type: String, require: true, default: 'pending' }, // pending, approved, rejected
