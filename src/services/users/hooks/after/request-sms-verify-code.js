@@ -15,7 +15,6 @@ module.exports = function requestSMSVerifyCode() {
       locale: 'zh-hk',
       code_length: 4,
     });
-    // console.log('Twillio response: ', response);
 
     return context;
   };

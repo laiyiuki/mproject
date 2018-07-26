@@ -7,7 +7,7 @@ const FacebookTokenStrategy = require('passport-facebook-token');
 const { protect } = require('@feathersjs/authentication-local').hooks;
 const { discard, iff, iffElse, isNot } = require('feathers-hooks-common');
 
-const CustomVerifier = require('./verifier');
+const FacebookTokenVerifier = require('./verifiers/facebook-token-verifier');
 
 // Before hooks
 const isValidPlatform = require('./hooks/before/is-valid-platform');
@@ -29,24 +29,12 @@ module.exports = function(app) {
         {
           name: 'facebookTokenTeacher',
           Strategy: FacebookTokenStrategy,
-          Verifier: CustomVerifier,
+          Verifier: FacebookTokenVerifier,
         },
         config.facebookTokenTeacher,
       ),
     ),
   );
-
-  // console.log(
-  //   'oauth',
-  //   Object.assign(
-  //     {
-  //       name: 'facebookTokenTeacher',
-  //       Strategy: FacebookStrategy,
-  //       Verifier: CustomVerifier,
-  //     },
-  //     config.facebookTokenTeacher,
-  //   ),
-  // );
 
   // The `authentication` service is used to create a JWT.
   // The before `create` hook registers strategies that can be used
@@ -54,29 +42,13 @@ module.exports = function(app) {
   app.service('authentication').hooks({
     before: {
       create: [
-        // ctx => (ctx.params.payload.platform = ctx.data.platform),
-        // ctx => console.log('0 auth data', ctx.data),
-        // ctx => console.log('1 auth params', ctx.params),
-        // ctx => console.log('=================='),
-        // ctx => console.log('=================='),
-
-        // iff(isNot(isAuthorization()), isValidPlatform()),
+        iff(isNot(isAuthorization()), isValidPlatform()),
         authentication.hooks.authenticate(config.strategies),
-        // ctx => console.log('2 auth before data', ctx.data),
-        // ctx => console.log('3 auth before params', ctx.params),
-        // ctx => console.log('=================='),
-        // ctx => console.log('=================='),
-
-        // iff(isNot(isAuthorization()), isValidPlatform()),
       ],
       remove: [authentication.hooks.authenticate('jwt')],
     },
     after: {
       create: [
-        // ctx => console.log('------'),
-        // ctx => console.log('4 auth after params', ctx.params),
-        // ctx => console.log('auth after dara', ctx.data),
-
         iff(ctx => ctx.params.authenticated, attachOrGenerateProfile()),
         protect('user.password', 'profile.password', 'profile.user.password'),
       ],

@@ -30,10 +30,12 @@ const noRecordFound = require('../../hooks/no-record-found');
 const isNewUser = require('./hooks/before/is-new-user');
 const constructPhone = require('./hooks/before/construct-phone');
 const isValidPlatform = require('./hooks/before/is-valid-platform');
+const isFacebookSignUp = require('./hooks/before/is-facebook-sign-up');
+const processDataFromFacebook = require('./hooks/before/process-data-from-facebook');
 
 // users: After hooks
 const requestSMSVerifyCode = require('./hooks/after/request-sms-verify-code');
-const signIn = require('./hooks/after/sign-in');
+// const signIn = require('./hooks/after/sign-in');
 const generateProfile = require('./hooks/after/generate-profile');
 
 module.exports = {
@@ -42,13 +44,13 @@ module.exports = {
     find: [skipRemainingHooks(isAction('phone-sign-up')), authenticate('jwt')],
     get: [iff(isProvider('external'), authenticate('jwt'))],
     create: [
-      ctx => console.log('********', ctx.data),
-
       isValidPlatform(),
       disableMultiItemCreate(),
-      constructPhone(),
-      isNewUser(),
-      hashPassword(),
+      iffElse(
+        isFacebookSignUp(),
+        [processDataFromFacebook()],
+        [constructPhone(), isNewUser(), hashPassword()],
+      ),
     ],
     update: [disallow()],
     patch: [
@@ -71,7 +73,11 @@ module.exports = {
       ]),
     ],
     get: [],
-    create: [generateProfile()],
+    create: [
+      generateProfile(),
+      // ctx => console.log('============> user result', ctx.result),
+      // ctx => console.log('============> user result', ctx.dispatch),
+    ],
     update: [],
     patch: [],
     remove: [],
